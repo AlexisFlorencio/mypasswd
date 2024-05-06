@@ -1,5 +1,4 @@
 import streamlit as st
-import PyPDF2
 import io
 
 def remove_pdf_password(input_pdf, output_pdf, password):
