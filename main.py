@@ -27,5 +27,5 @@ if uploaded_file is not None:
                     st.write(page.extractText())
             else:
                 st.error("El PDF no tiene contraseña o la contraseña proporcionada es incorrecta.")
-        except PyPDF2.utils.PdfReadError:
+        except PyPDF2.PdfReadError:
             st.error("Se produjo un error al leer el PDF. Asegúrate de que el archivo es un PDF válido.")
