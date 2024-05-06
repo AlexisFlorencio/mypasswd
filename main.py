@@ -1,17 +1,13 @@
 import streamlit as st
+import fitz  # PyMuPDF
 import io
 import tempfile
 
 def remove_pdf_password(input_pdf, output_pdf, password):
-    with open(input_pdf, 'rb') as file:
-        reader = PyPDF2.PdfFileReader(file)
-        if reader.isEncrypted:
-            reader.decrypt(password)
-            writer = PyPDF2.PdfFileWriter()
-            for page_num in range(reader.numPages):
-                writer.addPage(reader.getPage(page_num))
-            with open(output_pdf, 'wb') as output_file:
-                writer.write(output_file)
+    with fitz.open(input_pdf) as pdf:
+        if pdf.is_encrypted:
+            pdf.authenticate(password)
+            pdf.save(output_pdf)
             return True
         else:
             return False
