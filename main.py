@@ -1,29 +1,12 @@
-import streamlit as st
-import fitz  # PyMuPDF
-import io
-import tempfile
+import subprocess
 
 def remove_pdf_password(input_pdf, output_pdf, password):
-    with fitz.open(input_pdf) as pdf:
-        if pdf.is_encrypted:
-            pdf.authenticate(password)
-            pdf.save(output_pdf)
-            return True
-        else:
-            return False
+    command = f"qpdf --decrypt --password='{password}' {input_pdf} {output_pdf}"
+    subprocess.run(command, shell=True)
 
-st.title("PDF Password Remover")
+input_pdf = "input.pdf"
+output_pdf = "output.pdf"
+password = "tu_contraseña"
 
-uploaded_file = st.file_uploader("Carga el PDF con contraseña", type="pdf")
-
-if uploaded_file is not None:
-    password = st.text_input("Introduce la contraseña del PDF")
-    if st.button("Eliminar contraseña"):
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(uploaded_file.read())
-            input_pdf = temp_file.name
-        output_pdf = f"unlocked_{uploaded_file.name}"
-        if remove_pdf_password(input_pdf, output_pdf, password):
-            st.success(f"¡Contraseña eliminada! Puedes descargar el PDF sin contraseña desde [este enlace]({output_pdf}).")
-        else:
-            st.error("El PDF no tiene contraseña o la contraseña proporcionada es incorrecta.")
+remove_pdf_password(input_pdf, output_pdf, password)
+print("Contraseña eliminada del PDF.")
