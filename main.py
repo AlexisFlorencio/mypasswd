@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
-
 import streamlit as st
-import PyPDF2
+import PyPDF2[crypto]
 import io
 
 def remove_pdf_password(uploaded_file, password):
@@ -27,6 +25,13 @@ if uploaded_file is not None:
                 for page_num in range(pdf_reader.numPages):
                     page = pdf_reader.getPage(page_num)
                     st.write(page.extractText())
+                    
+                # Descargar el PDF sin contraseña
+                st.download_button(
+                    label="Descargar PDF sin contraseña",
+                    data=io.BytesIO(uploaded_file.getvalue()),
+                    file_name="pdf_sin_contraseña.pdf"
+                )
             else:
                 st.error("El PDF no tiene contraseña o la contraseña proporcionada es incorrecta.")
         except PyPDF2.PdfReadError:
